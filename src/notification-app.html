@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0a0f1c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>مركز الإشعارات</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0f1c;--card:#111827;--border:#1e293b;--text:#e2e8f0;--dim:#64748b;--accent:#22d3ee;--glow:rgba(34,211,238,0.15);--green:#34d399;--red:#f87171;--orange:#fbbf24}
+body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+body::before{content:'';position:fixed;top:-40%;left:-20%;width:80%;height:80%;background:radial-gradient(circle,rgba(34,211,238,0.04)0%,transparent 70%);pointer-events:none}
+.c{max-width:480px;margin:0 auto;padding:20px 16px 100px;position:relative;z-index:1}
+.header{text-align:center;padding:30px 0 20px}
+.header-icon{width:64px;height:64px;background:linear-gradient(135deg,var(--accent),#6366f1);border-radius:20px;display:inline-flex;align-items:center;justify-content:center;font-size:32px;margin-bottom:16px;box-shadow:0 8px 32px rgba(34,211,238,0.25);animation:f 3s ease-in-out infinite}
+@keyframes f{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.header h1{font-size:26px;font-weight:800;background:linear-gradient(135deg,#fff,var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px}
+.header p{color:var(--dim);font-size:14px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:14px}
+.card-label{font-size:12px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.status-row{display:flex;align-items:center;gap:10px}
+.dot{width:12px;height:12px;border-radius:50%;background:var(--red);flex-shrink:0;position:relative}
+.dot.on{background:var(--green);box-shadow:0 0 12px rgba(52,211,153,0.5)}
+.dot.on::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:2px solid var(--green);animation:p 2s ease-out infinite}
+@keyframes p{0%{transform:scale(.8);opacity:1}100%{transform:scale(1.8);opacity:0}}
+.dot.wait{background:var(--orange);animation:b 1s ease-in-out infinite}
+@keyframes b{50%{opacity:.3}}
+.stxt{font-size:17px;font-weight:700}
+.ig label{display:block;font-size:13px;color:var(--dim);margin-bottom:6px;font-weight:500}
+.ig input{width:100%;padding:12px 14px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'Tajawal',monospace;font-size:14px;direction:ltr;text-align:left}
+.ig input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--glow)}
+.ig{margin-bottom:12px}
+.btn{width:100%;padding:14px;border:none;border-radius:12px;font-family:'Tajawal',sans-serif;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .3s}
+.btn1{background:linear-gradient(135deg,var(--accent),#6366f1);color:#fff;box-shadow:0 4px 20px rgba(34,211,238,0.3)}
+.btn2{background:#1a2235;color:var(--text);border:1px solid var(--border)}
+.br{display:flex;gap:8px;margin-top:10px}.br .btn{flex:1}
+.nl{display:flex;flex-direction:column;gap:10px}
+.ni{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:14px;animation:si .3s ease-out;border-right:3px solid var(--accent)}
+@keyframes si{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+.ni .nt{font-size:15px;font-weight:700;margin-bottom:4px}
+.ni .nb{font-size:13px;color:var(--dim);margin-bottom:6px}
+.ni .nm{display:flex;justify-content:space-between;align-items:center}
+.na{font-size:11px;background:var(--glow);color:var(--accent);padding:3px 8px;border-radius:6px;font-weight:700}
+.ntime{font-size:11px;color:var(--dim)}
+.empty{text-align:center;padding:30px;color:var(--dim)}
+.empty .ei{font-size:40px;margin-bottom:10px;opacity:.5}
+.badge{display:inline-flex;align-items:center;justify-content:center;background:var(--accent);color:var(--bg);font-size:12px;font-weight:800;min-width:22px;height:22px;border-radius:11px;padding:0 6px}
+.steps{display:flex;flex-direction:column;gap:12px}
+.step{display:flex;gap:12px;align-items:flex-start}
+.sn{width:28px;height:28px;background:var(--glow);color:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0}
+.st{font-size:14px;color:var(--dim);line-height:1.6;padding-top:3px}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--card);border:1px solid var(--accent);color:var(--text);padding:12px 24px;border-radius:12px;font-family:'Tajawal',sans-serif;font-size:14px;font-weight:700;z-index:1000;transition:transform .4s cubic-bezier(.16,1,.3,1);box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.warn{background:#1e1b00;border:1px solid #fbbf24;border-radius:10px;padding:12px;margin-bottom:14px;font-size:13px;color:#fbbf24;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="c">
+  <div class="header">
+    <div class="header-icon">📡</div>
+    <h1>مركز الإشعارات</h1>
+    <p>استقبل إشعارات من سيرفرك — بدون Firebase</p>
+  </div>
+
+  <!-- حالة الاتصال -->
+  <div class="card">
+    <div class="card-label"><span>🔌</span> حالة الاتصال</div>
+    <div class="status-row">
+      <div class="dot" id="dot"></div>
+      <span class="stxt" id="stxt">غير متصل</span>
+    </div>
+  </div>
+
+  <!-- عنوان السيرفر -->
+  <div class="card">
+    <div class="card-label"><span>🖥️</span> عنوان السيرفر</div>
+    <div class="warn">
+      ⚠️ <strong>خطوة مطلوبة:</strong> انشر السيرفر على Render.com (مجاني) ثم ضع الرابط هنا.<br>
+      مثال: <span style="direction:ltr;display:inline">wss://your-app.onrender.com/ws</span>
+    </div>
+    <div class="ig">
+      <label>WebSocket URL</label>
+      <input type="url" id="url" placeholder="wss://your-app.onrender.com/ws">
+    </div>
+    <div class="br">
+      <button class="btn btn1" id="btnC" onclick="toggle()"><span id="btnT">🔗 اتصال</span></button>
+      <button class="btn btn2" onclick="test()">🧪 تجربة</button>
+    </div>
+  </div>
+
+  <!-- الإشعارات -->
+  <div class="card">
+    <div class="card-label">
+      <span>📩</span> الإشعارات
+      <span class="badge" id="cnt" style="display:none">0</span>
+    </div>
+    <div class="nl" id="nl">
+      <div class="empty">
+        <div class="ei">🔔</div>
+        <div>لم تصل أي إشعارات بعد</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- خطوات النشر -->
+  <div class="card">
+    <div class="card-label"><span>🚀</span> كيف تنشر السيرفر مجاناً؟</div>
+    <div class="steps">
+      <div class="step"><div class="sn">1</div><div class="st">سجّل في <strong>github.com</strong> وأنشئ repository جديد</div></div>
+      <div class="step"><div class="sn">2</div><div class="st">ارفع ملفي <strong>app.py</strong> و <strong>requirements.txt</strong></div></div>
+      <div class="step"><div class="sn">3</div><div class="st">سجّل في <strong>render.com</strong> واختر New → Web Service</div></div>
+      <div class="step"><div class="sn">4</div><div class="st">اربط الـ repository واختر Free plan</div></div>
+      <div class="step"><div class="sn">5</div><div class="st">Start Command: <code style="color:var(--accent)">python app.py</code></div></div>
+      <div class="step"><div class="sn">6</div><div class="st">انتظر الـ Deploy ثم ضع الرابط هنا:<br><code style="color:var(--accent)">wss://اسم-تطبيقك.onrender.com/ws</code></div></div>
+    </div>
+  </div>
+
+  <!-- الأوامر -->
+  <div class="card">
+    <div class="card-label"><span>🎯</span> الأوامر المدعومة</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px">
+      <span class="na">open_order</span>
+      <span class="na">open_url</span>
+      <span class="na">show_message</span>
+      <span class="na">call_phone</span>
+      <span class="na">share</span>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let ws=null,connected=false,reTimer=null,reAttempts=0,count=0;
+const $=id=>document.getElementById(id);
+
+// Load saved URL
+const saved=localStorage.getItem('ws_url');
+if(saved)$('url').value=saved;
+
+// Request notification permission
+if('Notification'in window&&Notification.permission==='default')Notification.requestPermission();
+
+function toggle(){connected?disconnect():connect()}
+
+function connect(){
+  const url=$('url').value.trim();
+  if(!url){toast('❌ أدخل عنوان السيرفر');return}
+  localStorage.setItem('ws_url',url);
+  setS('wait','جاري الاتصال...');
+  $('btnT').textContent='⏳ جاري...';
+
+  try{
+    ws=new WebSocket(url);
+    ws.onopen=()=>{
+      connected=true;reAttempts=0;
+      setS('on','متصل ✅');
+      $('btnT').textContent='🔴 قطع الاتصال';
+      toast('✅ تم الاتصال!');
+      ws.send(JSON.stringify({type:'register',device:'pwa'}));
+    };
+    ws.onmessage=e=>{
+      try{
+        const d=JSON.parse(e.data);
+        if(d.title){addN(d);sysN(d);doAction(d);toast('📩 '+d.title)}
+      }catch(er){}
+    };
+    ws.onclose=e=>{
+      connected=false;setS('off','غير متصل ❌');
+      $('btnT').textContent='🔗 اتصال';
+      if(!e.wasClean)recon();
+    };
+    ws.onerror=()=>{
+      setS('off','فشل الاتصال ❌');
+      $('btnT').textContent='🔗 اتصال';
+      toast('❌ فشل الاتصال');
+    };
+  }catch(e){toast('❌ عنوان غير صحيح');setS('off','خطأ');$('btnT').textContent='🔗 اتصال'}
+}
+
+function disconnect(){
+  if(ws)ws.close(1000);ws=null;connected=false;clearTimeout(reTimer);
+  setS('off','غير متصل');$('btnT').textContent='🔗 اتصال';
+}
+
+function recon(){
+  reAttempts++;
+  const d=Math.min(Math.pow(2,reAttempts),30);
+  setS('wait','إعادة الاتصال بعد '+d+' ثانية...');
+  reTimer=setTimeout(()=>{if(!connected)connect()},d*1000);
+}
+
+function setS(s,t){$('dot').className='dot '+(s==='on'?'on':s==='wait'?'wait':'');$('stxt').textContent=t}
+
+function addN(d){
+  const em=$('nl').querySelector('.empty');if(em)em.remove();
+  const el=document.createElement('div');el.className='ni';
+  const now=new Date();
+  const time=now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
+  el.innerHTML=`<div class="nt">${esc(d.title)}</div><div class="nb">${esc(d.body||'')}</div><div class="nm"><span class="na">${d.action||'show_message'}</span><span class="ntime">${time}</span></div>`;
+  $('nl').insertBefore(el,$('nl').firstChild);
+  count++;$('cnt').style.display='inline-flex';$('cnt').textContent=count;
+  if(navigator.vibrate)navigator.vibrate([200,100,200]);
+}
+
+function sysN(d){
+  if('Notification'in window&&Notification.permission==='granted'){
+    const n=new Notification(d.title||'إشعار',{body:d.body||'',tag:'n-'+Date.now()});
+    n.onclick=()=>{window.focus();doAction(d)};
+  }
+}
+
+function doAction(d){
+  const a=d.action||'show_message',dd=d.data||{};
+  if(a==='open_url'&&dd.url)window.open(dd.url,'_blank');
+  else if(a==='call_phone'&&dd.phone)window.location.href='tel:'+dd.phone;
+  else if(a==='share'&&navigator.share&&dd.share_text)navigator.share({text:dd.share_text});
+  else if(a==='open_order')toast('📋 طلب #'+(dd.order_id||''));
+}
+
+function test(){
+  addN({title:'🧪 إشعار تجريبي',body:'هذا إشعار تجريبي - التطبيق يعمل!',action:'open_order',data:{order_id:'1234'}});
+  sysN({title:'🧪 إشعار تجريبي',body:'التطبيق يعمل بنجاح!'});
+  toast('✅ إشعار تجريبي');
+}
+
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
+function esc(t){const d=document.createElement('div');d.textContent=t;return d.innerHTML}
+
+window.addEventListener('load',()=>{if(saved)setTimeout(connect,500)});
+</script>
+</body>
+</html>
